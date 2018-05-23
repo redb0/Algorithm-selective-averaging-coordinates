@@ -68,19 +68,7 @@ def initialization_X_0(low, up, dim):
 
 
 def initialization_X_0_rand(low, up, dim):
-
-    # X_0 = np.zeros((dim, ))
     X_0 = np.random.uniform(low, up, (dim,))
-    # if (type(up) == int) or (type(up) == float):
-    #     down = low
-    #     high = up
-    #     for i in range(dim):
-    #         X_0[i] = (high - down) / 2
-    #         X_0[i] = X_0[i] + down
-    # else:
-    #     X_0 = (up - low) / 2
-    #     X_0 = X_0 + low
-
     return X_0
 
 
@@ -151,9 +139,7 @@ def find_g(test_points, fitness_test_points, min_flag):
     fit_max_tp = np.max(fitness_test_points)
     fit_min_tp = np.min(fitness_test_points)
 
-    # i = len(fit)
     N = len(fitness_test_points)
-    dimention = len(test_points[0])
 
     if fit_min_tp == fit_max_tp:
         g = np.ones((N, 1))
@@ -221,13 +207,10 @@ def SAC(f_index, max_iter, N, min_flag, nuclear_func_index, selectivity_factor, 
         coord_x = np.empty((max_iter, 1, dimension))
         coord_x_test = np.empty((max_iter, N, dimension))
 
-    # X = initialization_X_0(low, up, dimension)
     X = initialization_X_0_rand(low, up, dimension)
 
-    # delta_X_0 = np.array([(up - low) / 2])
     delta_X_0 = np.array([np.max([up-X[0], low-X[0]]), np.max([up-X[1], low-X[1]])])
 
-    # delta_X = np.zeros((dimension, ))
 
     delta_X = delta_X_0
 
@@ -299,13 +282,6 @@ def SAC(f_index, max_iter, N, min_flag, nuclear_func_index, selectivity_factor, 
 # Функция для проверки условий останова
 def break_check(best_chart, epsilon, delta_X):
     e = pow(10, -10)
-    k = 0
-    # for i in range(len(delta_X)):
-    #     if delta_X[i] < e:
-    #         k = k + 1
-    # if k * 1.0 >= len(delta_X) * 0.9:
-    #     return True
-
     if np.abs(best_chart[len(best_chart) - 1] - best_chart[len(best_chart) - 2]) <= e:
         return True
     else:
@@ -317,7 +293,7 @@ def main():
     f_index = 5
     N = 200
     max_iter = 10
-    min_flag = 4
+    min_flag = 1
     nuclear_func_index = 1
     rate_change_graph = 700
     epsilon = pow(10, -10)

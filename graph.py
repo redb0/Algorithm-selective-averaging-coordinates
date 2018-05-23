@@ -44,12 +44,6 @@ def draw_isolines(low, up, dimension, f_index):
 
     levels = np.arange(np.min(Z), np.max(Z), delta)  # * 65
 
-    # CS = plt.contour(X, Y, Z, levels=levels)
-    # CS = plt.contour(X, Y, Z)
-    # plt.clabel(CS, fmt="%1.1f", inline=1, fontsize=3)
-    # plt.title("График изолиний функции F" + str(f_index))
-    # plt.show()
-
     return X, Y, Z, levels
 
 
@@ -137,7 +131,6 @@ def print_graph(f_index, rate_change_graph, coord, max_iter):
 
         metadata = dict(title='Movie Test', artist='Matplotlib',
                         comment='Movie support!')
-        # file_name = 'animation_F_' + str(f_index) + '.gif'
         file_name = 'animation_F_' + str(f_index) + '.mpeg'
         rcParams['animation.bitrate'] = 2000
         ani.save(file_name, writer=animation.ImageMagickFileWriter(metadata=metadata, fps=5))  # ImageMagickFileWriter, extra_args=['-vcodec', 'libx264']
@@ -182,13 +175,8 @@ def graph_motion_points_3d(f_index, rate_change_graph, coord, max_iter):
     rcParams['animation.ffmpeg_path'] = r'C:\Program Files\ImageMagick-7.0.7-Q16\ffmpeg.exe'
 
     fig = plt.figure()
-    # ax = Axes3D(fig)
     ax = fig.add_subplot(111, projection='3d')
-    # ax = fig.gca(projection='3d')
     xdata, ydata, zdata = [], [], []
-    # line, = ax.scatter([], [], [], lw=2, color='b', marker='o', label='Агенты') # linestyle='-'
-    # line, = ax.scatter([], [], [], marker='o')
-    # line, = ax.plot([], [], [], linestyle="", marker="o", color='b')
     line = ax.scatter([], [], [], marker='o', color='r', label='Агенты')
 
     plt.legend(loc='upper left')
@@ -207,11 +195,6 @@ def graph_motion_points_3d(f_index, rate_change_graph, coord, max_iter):
     ani = animation.FuncAnimation(fig, run_3d, frames=data_gen_for_3d_func(max_iter, coord, f_index, dim), blit=False,
                                   interval=rate_change_graph, repeat=False,
                                   init_func=make_init_3d(low, up, xdata, ydata, zdata, ax, line), fargs=(line, ax))
-
-    # metadata = dict(title='Movie Test', artist='Matplotlib',
-    #                 comment='Movie support!')
-    # file_name = 'animation_3d_F_' + str(f_index) + '.gif'
-    # ani.save(file_name, writer=animation.ImageMagickFileWriter(metadata=metadata, fps=5))
 
     plt.show()
 
@@ -236,8 +219,6 @@ def make_init_3d(low, up, xdata, ydata, zdata, ax,  line):
         del xdata[:]
         del ydata[:]
         del zdata[:]
-        # line.set_data(xdata, ydata)
-        # line.set_3d_properties(zdata)
         line._offsets3d = (xdata, ydata, zdata)
         if (type(up) == int) or (type(up) == float):
             ax.set_ylim(low, up)
@@ -274,45 +255,6 @@ def run_3d(data, line, ax):
     return line
 
 
-# def graph_with_arrow(f_index, rate_change_graph, coord, max_iter):
-#     low, up, dim = test_function_range.get_range(f_index)
-#
-#     # точечный анимированный график для трехмерных функций
-#     if dim == 2:
-#         fig, ax = plt.subplots()
-#         xdata, ydata = [], []
-#         line, = ax.plot([], [], lw=2, color='b', linestyle=' ', marker='o', label='Агенты')
-#         plt.legend(loc='upper left')
-#         X, Y, Z, levels = draw_isolines(low, up, dim, f_index)
-#         # рисование графика изолиний исходной функции
-#         CS = plt.contour(X, Y, Z, levels=levels)
-#         ax.grid()
-#         # создание анимированного точечного графика
-#         # blit контролирует используется ли blitting. Если True не будет работать масштабирование и перемещение графика
-#         ani = animation.FuncAnimation(fig, run_arrow, frames=data_gen(max_iter, coord), blit=False,
-#                                       interval=rate_change_graph, repeat=False,
-#                                       init_func=make_init(low, up, xdata, ydata, line, ax), fargs=(line, plt))
-#
-#         plt.show()
-#
-# xlist = []
-# ylist = []
-#
-#
-# def run_arrow(data, line, plt):
-#     x, y = data
-#
-#     xlist.append(x[0][0])
-#     ylist.append(y[0][0])
-#
-#     line.set_data(x, y)
-#     if len(xlist) >= 2:
-#         for i in range(0, len(xlist), 2):
-#             plt.arrow(xlist[-2], ylist[-2], xlist[-1], ylist[-1], shape='full', lw=3, length_includes_head=True, head_width=.01)
-#
-#     return line, plt
-
-
 def comparative_graph_convergence(f_index, **best_chart_alg):
     """Функция построения сравнительного графика сходимости алгоритмов."""
     colors = ['b', 'g', 'r', 'm', 'k', 'y', 'c']
@@ -321,7 +263,6 @@ def comparative_graph_convergence(f_index, **best_chart_alg):
     fig, ax = plt.subplots()
     plt.grid(True, color="k")
     min_char = []
-    # chart = np.array(best_chart_alg.values())
     for b in best_chart_alg:
         min_char.append(np.min(best_chart_alg.get(b)))
 
@@ -346,7 +287,6 @@ def comparative_graph_convergence(f_index, **best_chart_alg):
     plt.legend(best_chart_alg.keys(), loc='upper right')
     file_name = 'convergence_F_' + str(f_index) + '.png'
     plt.savefig(file_name)
-    # plt.setp()
 
     plt.show()
 
