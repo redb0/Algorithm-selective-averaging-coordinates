@@ -1,5 +1,6 @@
 import numpy as np
 from asymmetric_sac_alg_v1 import check_delta
+from graph import visualization
 from options import Options
 
 from nuclear_function import get_nuclear_func_val
@@ -176,15 +177,9 @@ def sac(test_func: TestFunc, options: Options, epsilon=pow(10, -5), max_compress
 
         find_norm_nuclear_func(test_points, options)
 
-        # line1 = np.array([[(op_point[0] - delta[0][0]), i - 5] for i in range(11)])
-        # line2 = np.array([[(op_point[0] + delta[0][1]), i - 5] for i in range(11)])
-        # line3 = np.array([[i - 5, (op_point[1] - delta[1][0])] for i in range(11)])
-        # line4 = np.array([[i - 5, (op_point[1] + delta[1][1])] for i in range(11)])
-        # a1 = np.array([point.coord for point in test_points if point.idx == 0])
-        # a2 = np.array([point.coord for point in test_points if point.idx == 1])
-        # a3 = np.array([point.coord for point in test_points if point.idx == 2])
-        # a4 = np.array([point.coord for point in test_points if point.idx == 3])
-        # graph.graph12(5, op_point, a1, a2, a3, a4, line1, line2, line3, line4, test_points)
+        # Раскомментировать следующие строки для пошаговой визуализации
+        # points = [np.array([p.coord for p in test_points if p.idx == i]) for i in range(np.power(2, test_func.dim))]
+        # visualization(op_point, delta, test_func._function, points, test_func.down, test_func.up, d=0.1)
 
         op_point, delta = move(op_point, test_points, delta, options)
         delta = check_delta(delta, op_point, test_func)

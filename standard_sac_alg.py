@@ -1,5 +1,6 @@
 import numpy as np
 from asymmetric_sac_alg_v1 import find_norm_nuclear_func, find_g
+from graph import visualization
 from options import Options
 
 from test_functions import TestFunc
@@ -102,11 +103,8 @@ def standard_sac(test_func: TestFunc, options: Options, epsilon=pow(10, -5)):
 
         nf_val = find_norm_nuclear_func(g, options)
 
-        # line1 = np.array([[(op_point[0] - delta[0]), i - 5] for i in range(11)])
-        # line2 = np.array([[(op_point[0] + delta[0]), i - 5] for i in range(11)])
-        # line3 = np.array([[i - 5, (op_point[1] - delta[1])] for i in range(11)])
-        # line4 = np.array([[i - 5, (op_point[1] + delta[1])] for i in range(11)])
-        # graph.graph13(5, op_point, test_points, line1, line2, line3, line4, g)
+        # Раскомментировать следующие строки для пошаговой визуализации
+        # visualization(op_point, delta, test_func._function, test_points, test_func.down, test_func.up, d=0.1)
 
         op_point, delta = move(op_point, nf_val, test_points, delta, options)
 
