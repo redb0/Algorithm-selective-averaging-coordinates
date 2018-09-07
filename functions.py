@@ -5,6 +5,15 @@ import numpy as np
 
 def get_bocharov_feldbaum_func(n: int, a: List[List[float]], c: List[List[float]],
                                p: List[List[float]], b: List[float]):
+    """
+    Функция Бочарова-Фельдбаума.
+    :param n: количество экстремумов
+    :param a: список коэффициентов крутизны функции в районе экстремумов
+    :param c: список координат экстремумов
+    :param p: список степеней гладкости функции в районе экстремумов
+    :param b: список знаений функции в экстремумах
+    :return: функция принимающая на вход координаты точки и возвращающая значение функции в этой точке.
+    """
     def func(x):
         l = []
         for i in range(n):
@@ -20,6 +29,15 @@ def get_bocharov_feldbaum_func(n: int, a: List[List[float]], c: List[List[float]
 
 def get_hyperbolic_potential_abs(n: int, a: List[float], c: List[List[float]],
                                  p: List[List[float]], b: List[float]):
+    """
+    Гиперболический потенциал.
+    :param n: количество экстремумов
+    :param a: список коэффициентов крутизны функции в районе экстремумов
+    :param c: список координат экстремумов
+    :param p: список степеней гладкости функции в районе экстремумов
+    :param b: список знаений функции в экстремумах
+    :return: функция принимающая на вход координаты точки и возвращающая значение функции в этой точке.
+    """
     def func(x):
         value = 0
         for i in range(n):
@@ -34,6 +52,15 @@ def get_hyperbolic_potential_abs(n: int, a: List[float], c: List[List[float]],
 
 
 def get_hyperbolic_potential_sqr(n: int, a: List[List[float]], c: List[List[float]], p, b):
+    """
+    Гиперболический потенциал со степенями = 2.
+    :param n: количество экстремумов
+    :param a: список коэффициентов крутизны функции в районе экстремумов
+    :param c: список координат экстремумов
+    :param p: список степеней гладкости функции в районе экстремумов
+    :param b: список знаений функции в экстремумах
+    :return: функция принимающая на вход координаты точки и возвращающая значение функции в этой точке.
+    """
     def func(x):
         value = 0
         for i in range(n):
@@ -49,6 +76,15 @@ def get_hyperbolic_potential_sqr(n: int, a: List[List[float]], c: List[List[floa
 
 def get_exponential_potential(n: int, a: List[float], c: List[List[float]],
                               p: List[List[float]], b: List[float]):
+    """
+    Экспоненциальный потенциал.
+    :param n: количество экстремумов
+    :param a: список коэффициентов крутизны функции в районе экстремумов
+    :param c: список координат экстремумов
+    :param p: список степеней гладкости функции в районе экстремумов
+    :param b: список знаений функции в экстремумах
+    :return: функция принимающая на вход координаты точки и возвращающая значение функции в этой точке.
+    """
     def func(x):
         value = 0
         for i in range(n):

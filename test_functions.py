@@ -7,6 +7,10 @@ number = Union[int, float]
 
 
 class TestFunc:
+    """
+    Описание тестовой функции.
+    Подробнее смотри в ./inform_tf.py
+    """
     def __init__(self, inform):
         self._index = inform['index']
         self._type = inform['type']

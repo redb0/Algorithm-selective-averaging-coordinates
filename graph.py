@@ -20,14 +20,12 @@ def draw_isolines(low, up, func, d=0.05):
     y = np.arange(low[1], up[1], d)
 
     z = np.zeros((len(x), len(y)))
-
     x, y = np.meshgrid(x, y)
 
     for i in range(len(x)):
         for j in range(len(x[i])):
             z[i][j] = func(np.array([x[i][j], y[i][j]]))
 
-    # levels = np.arange(np.min(z), np.max(z), d)  # * 65
     levels = np.array(get_levels(np.min(z), np.max(z), d))
 
     return x, y, z, levels

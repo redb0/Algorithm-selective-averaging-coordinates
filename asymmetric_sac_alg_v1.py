@@ -8,6 +8,22 @@ from test_functions import TestFunc
 
 
 def initialization_op_point_and_delta(test_func: TestFunc, options: Options):
+    """
+    Инициализация рабочей точки и дельта-области.
+    Режимы инициализации рабочей точки:
+        1) расположение в центре области поиска ('center')
+        2) случайно в области поиска ('random')
+        3) врусную ('manual')
+    :param test_func: тестовая функция 
+    :param options  : настройки алгоритма
+    :return op_point: координаты рабочей точки
+    :return delta   : массив значений дельта-области, изначально покрывает всю область поиска.
+                      Для двумерного пространства (координаты x, y) (ось X - горизонтально, ось Y - вертикально)
+                      delta = [
+                                  [расстояние по x от op_point влево, расстояние по x от op_point вправо],
+                                  [расстояние по y от op_point вниз, расстояние по y от op_point вверх]
+                              ]
+    """
     dim = test_func.dim
     op_point = np.empty((dim,))
     low = test_func.down
@@ -24,15 +40,24 @@ def initialization_op_point_and_delta(test_func: TestFunc, options: Options):
     return op_point, delta
 
 
-def get_quad_idx(center, point):
-    idx = 0
-    for i in range(len(center)):
-        if point[i] > center[i]:
-            idx += np.power(2, len(center) - i - 1)
-    return idx
+# def get_quad_idx(center, point):
+#     idx = 0
+#     for i in range(len(center)):
+#         if point[i] > center[i]:
+#             idx += np.power(2, len(center) - i - 1)
+#     return idx
 
 
 def initialization_test_point(test_func: TestFunc, number_point: int, delta, op_point):
+    """
+    Инициализация тестовых точек.
+    Происходит случайным образом внутри delta-области.
+    :param test_func   : тестовая функция 
+    :param number_point: количество тестовых точек
+    :param delta       : размеры delta-области
+    :param op_point    : координаты рабочей точки
+    :return: список координат тестовых точек
+    """
     dim = test_func.dim
     number_quadrants = np.power(2, test_func.dim)
     quad_tree = [[] for _ in range(number_quadrants)]
@@ -52,6 +77,13 @@ def initialization_test_point(test_func: TestFunc, number_point: int, delta, op_
 
 
 def find_norm_nuclear_func(g, options: Options):
+    """
+    Функция вычисления весов точек. 
+    Нормированные значения  целевой функции пропускаются через ядерную функцию и затем нормируются.
+    :param g      : список нормированных значений целевой функции
+    :param options: настройки алгоритма
+    :return: список нормированных на [0, 1] весов целевой функции
+    """
     nuclear_func_norm_val = np.empty((len(g),))
     sum_val = 0
     for i in range(len(g)):
@@ -65,6 +97,12 @@ def find_norm_nuclear_func(g, options: Options):
 
 
 def find_g(fit_tp_value, min_flag: int):
+    """
+    Функция вычисления нормированного значения целевой функции.
+    :param fit_tp_value: список значений целевой функции
+    :param min_flag    : флаг минимизации (1 - минимизация, 0 - максимизация)
+    :return: список нормированных на [0, 1] значений целевой функции
+    """
     max_fit_tp = np.max(fit_tp_value)
     min_fit_tp = np.min(fit_tp_value)
 
@@ -181,8 +219,8 @@ def sac(test_func: TestFunc, options: Options, epsilon=pow(10, -5)):
     return x_bests, best_chart, number_measurements, stop_iter
 
 
-def in_rectangle(point, borders):
-    return all(list(map(lambda x, b: True if b[0] <= x <= b[1] else False, point, borders)))
+# def in_rectangle(point, borders):
+#     return all(list(map(lambda x, b: True if b[0] <= x <= b[1] else False, point, borders)))
 
 
 def test():
