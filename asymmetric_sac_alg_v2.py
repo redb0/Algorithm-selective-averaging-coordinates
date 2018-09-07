@@ -1,6 +1,5 @@
 import numpy as np
 from asymmetric_sac_alg_v1 import check_delta
-# from standard_sac_alg import standard_sac
 from options import Options
 
 from nuclear_function import get_nuclear_func_val
@@ -107,7 +106,6 @@ def find_fitness_func_value(test_points, op_point, test_func: TestFunc, options:
     fitness_op_value += amp_noise
 
     for i in range(len(test_points)):
-        # for j in range(len(test_points[i])):
         amp_noise = np.random.uniform(-1, 1) * test_func.amp * options.k_noise
         val = test_func.get_value(test_points[i].coord) + amp_noise
         test_points[i].func_val = val
@@ -115,7 +113,7 @@ def find_fitness_func_value(test_points, op_point, test_func: TestFunc, options:
     return fitness_op_value
 
 
-def move(op_point, test_points, delta, options: Options, it):
+def move(op_point, test_points, delta, options: Options):
     dim = len(op_point)
 
     new_delta = np.zeros(delta.shape)
@@ -151,8 +149,7 @@ def move(op_point, test_points, delta, options: Options, it):
     return new_op_point, new_delta
 
 
-def sac(test_func: TestFunc, options: Options):
-    # np.random по умолчанию засеевается временем
+def sac(test_func: TestFunc, options: Options, epsilon=pow(10, -5), max_compression=0.03):
     op_point, delta = initialization_op_point_and_delta(test_func, options)
     number_measurements = 0
 
@@ -171,7 +168,7 @@ def sac(test_func: TestFunc, options: Options):
         best_chart[i] = fit_op_val
 
         if iteration > 2:
-            if (np.sum(delta[0]) < pow(10, -5)) or (np.sum(delta[1]) < pow(10, -5)):
+            if (np.sum(delta[0]) < epsilon) or (np.sum(delta[1]) < epsilon):
                 stop_iter = iteration
                 break
 
@@ -189,10 +186,10 @@ def sac(test_func: TestFunc, options: Options):
         # a4 = np.array([point.coord for point in test_points if point.idx == 3])
         # graph.graph12(5, op_point, a1, a2, a3, a4, line1, line2, line3, line4, test_points)
 
-        op_point, delta = move(op_point, test_points, delta, options, i)
+        op_point, delta = move(op_point, test_points, delta, options)
         delta = check_delta(delta, op_point, test_func)
         for d in range(len(delta)):
-            if sum(delta[d]) / (test_func.up[d] - test_func.down[d]) < 0.03:
+            if sum(delta[d]) / (test_func.up[d] - test_func.down[d]) < max_compression:
                 if delta[d][0] > delta[d][1]:
                     delta[d][1] = delta[d][0]
                 else:
@@ -211,32 +208,21 @@ def test():
     tf = TestFunc(TEST_FUNC_1)
 
     p = 0
-    # p1 = 0
     nm = 0
-    # nm1 = 0
+    average_numb_iter = 0
+    ep = 0.2
+    g_min = tf.global_min
     for i in range(100):
-        x_bests, best_chart, number_measurements, stop_iter = sac(tf, op)
-        # x_bests1, best_chart1, number_measurements1, stop_iter1 = standard_sac(tf, op)
-        print('Новый', x_bests)
-        print('Новый', stop_iter)
-        # print('Старый', x_bests1)
-        # print('Старый', stop_iter1)
+        x_bests, best_chart, number_measurements, stop_iter = sac(tf, op, epsilon=pow(10, -5), max_compression=0.03)
+        print('Решение', x_bests)
+        print('Количество итераций', stop_iter)
         nm += number_measurements
-        # nm1 += number_measurements1
-        if (-2.2 <= x_bests[0] <= -1.8) and (3.8 <= x_bests[1] <= 4.2):
+        average_numb_iter += stop_iter
+        if (g_min[0] - ep <= x_bests[0] <= g_min[0] + ep) and (g_min[1] - ep <= x_bests[1] <= g_min[1] + ep):
             p += 1
-        # if (-2.2 <= x_bests1[0] <= -1.8) and (3.8 <= x_bests1[1] <= 4.2):
-        #     p1 += 1
-    print('Новый Вероятность', p)
-    print('Новый Среднее количество измерений', nm / 100.0)
-
-    # print('Старый Вероятность', p1)
-    # print('Старый Среднее количество измерений', nm1 / 100.0)
-
-    # print(x_bests)
-    # print(best_chart[:stop_iter])
-    # print(number_measurements)
-    # print(stop_iter)
+    print('Оценка вероятности', p / 100.0)
+    print('Среднее количество измерений', nm / 100.0)
+    print('Среднее количество итераций:', average_numb_iter / 100.0)
 
 
 def main():

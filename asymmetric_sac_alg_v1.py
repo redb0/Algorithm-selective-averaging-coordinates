@@ -1,7 +1,6 @@
 import numpy as np
 from options import Options
 
-# from norm import graph
 from nuclear_function import get_nuclear_func_val
 from test_functions import TestFunc
 
@@ -143,8 +142,7 @@ def move(op_point, nf_norm_val, test_points, delta, options: Options):
     return new_op_point, new_delta
 
 
-def sac(test_func: TestFunc, options: Options):
-    # np.random по умолчанию засеевается временем
+def sac(test_func: TestFunc, options: Options, epsilon=pow(10, -5)):
     op_point, delta = initialization_op_point_and_delta(test_func, options)
     number_measurements = 0
 
@@ -163,7 +161,7 @@ def sac(test_func: TestFunc, options: Options):
         best_chart[i] = fit_op_val
 
         if iteration > 2:
-            if (np.sum(delta[0]) < pow(10, -5)) or (np.sum(delta[1]) < pow(10, -5)):
+            if (np.sum(delta[0]) < epsilon) or (np.sum(delta[1]) < epsilon):
                 stop_iter = iteration
                 break
 
@@ -183,36 +181,6 @@ def sac(test_func: TestFunc, options: Options):
     return x_bests, best_chart, number_measurements, stop_iter
 
 
-# def magic(delta, test_points, op_point, new_op_point, nf_val):
-#     # angle
-#     a1 = np.array([op_point[0] - delta[0][0], op_point[1] - delta[1][0]])
-#     a2 = np.array([op_point[0] - delta[0][0], op_point[1] + delta[1][1]])
-#     a3 = np.array([op_point[0] + delta[0][1], op_point[1] + delta[1][1]])
-#     a4 = np.array([op_point[0] + delta[0][1], op_point[1] - delta[1][0]])
-#     a1_idx = get_quad_idx(op_point, a1)
-#     a2_idx = get_quad_idx(op_point, a2)
-#     a3_idx = get_quad_idx(op_point, a3)
-#     a4_idx = get_quad_idx(op_point, a4)
-#     quad_indexes = {a1_idx, a2_idx, a3_idx, a4_idx}
-#
-#     constraints = np.zeros(delta.shape)
-#
-#     for i in range(len(delta)):
-#         constraints[i] = np.array([new_op_point[i] - delta[i][0], new_op_point[i] - delta[i][1]])
-#
-#     all_points = []
-#     func_val = []
-#
-#     for idx in quad_indexes:
-#         points = test_points[idx]
-#         for j in range(len(points)):
-#             if in_rectangle(points[j], constraints):
-#                 all_points.append(points[j])
-#                 k = sum([len(nf_val[i]) for i in range(idx)])
-#                 k += j
-#                 func_val.append(nf_val[k])
-
-
 def in_rectangle(point, borders):
     return all(list(map(lambda x, b: True if b[0] <= x <= b[1] else False, point, borders)))
 
@@ -223,32 +191,21 @@ def test():
     tf = TestFunc(TEST_FUNC_1)
 
     p = 0
-    # p1 = 0
     nm = 0
-    # nm1 = 0
+    average_numb_iter = 0
+    ep = 0.2
+    g_min = tf.global_min
     for i in range(100):
-        x_bests, best_chart, number_measurements, stop_iter = sac(tf, op)
-        # x_bests1, best_chart1, number_measurements1, stop_iter1 = standard_sac(tf, op)
-        print('Новый', x_bests)
-        print('Новый', stop_iter)
-        # print('Старый', x_bests1)
-        # print('Старый', stop_iter1)
+        x_bests, best_chart, number_measurements, stop_iter = sac(tf, op, epsilon=pow(10, -5))
+        print('Решение:', x_bests)
+        print('Количество итераций:', stop_iter)
         nm += number_measurements
-        # nm1 += number_measurements1
-        if (-2.2 <= x_bests[0] <= -1.8) and (3.8 <= x_bests[1] <= 4.2):
+        average_numb_iter += stop_iter
+        if (g_min[0] - ep <= x_bests[0] <= g_min[0] + ep) and (g_min[1] - ep <= x_bests[1] <= g_min[1] + ep):
             p += 1
-        # if (-2.2 <= x_bests1[0] <= -1.8) and (3.8 <= x_bests1[1] <= 4.2):
-        #     p1 += 1
-    print('Вероятность', p)
-    print('Среднее количество измерений', nm / 100.0)
-
-    # print('Вероятность', p1)
-    # print('Среднее количество измерений', nm1 / 100.0)
-
-    # print(x_bests)
-    # print(best_chart[:stop_iter])
-    # print(number_measurements)
-    # print(stop_iter)
+    print('Оценка вероятности:', p / 100.0)
+    print('Среднее количество измерений:', nm / 100.0)
+    print('Среднее количество итераций:', average_numb_iter / 100.0)
 
 
 def main():

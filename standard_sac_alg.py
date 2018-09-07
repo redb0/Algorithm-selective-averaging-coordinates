@@ -75,7 +75,7 @@ def move(op_point, nf_norm_val, test_points, delta, options: Options):
     return new_op_point, new_delta
 
 
-def standard_sac(test_func: TestFunc, options: Options):
+def standard_sac(test_func: TestFunc, options: Options, epsilon=pow(10, -5)):
     op_point, delta = initialization_op_point_and_delta(test_func, options)
     number_measurements = 0
 
@@ -94,7 +94,7 @@ def standard_sac(test_func: TestFunc, options: Options):
         best_chart[i] = fit_op_val
 
         if iteration > 2:
-            if (np.sum(delta[0]) < pow(10, -5)) or (np.sum(delta[1]) < pow(10, -5)):
+            if (np.sum(delta[0]) < epsilon) or (np.sum(delta[1]) < epsilon):
                 stop_iter = iteration
                 break
 
@@ -109,7 +109,6 @@ def standard_sac(test_func: TestFunc, options: Options):
         # graph.graph13(5, op_point, test_points, line1, line2, line3, line4, g)
 
         op_point, delta = move(op_point, nf_val, test_points, delta, options)
-        # delta = check_delta(delta, op_point, test_func)
 
     return x_bests, best_chart, number_measurements, stop_iter
 
@@ -120,32 +119,21 @@ def test():
     tf = TestFunc(TEST_FUNC_1)
 
     p = 0
-    # p1 = 0
     nm = 0
-    # nm1 = 0
+    average_numb_iter = 0
+    ep = 0.2
+    g_min = tf.global_min
     for i in range(100):
-        x_bests, best_chart, number_measurements, stop_iter = standard_sac(tf, op)
-        # x_bests1, best_chart1, number_measurements1, stop_iter1 = sac(tf, op)
-        # print('Новый', x_bests1)
-        # print('Новый', stop_iter1)
-        print('Старый', x_bests)
-        print('Старый', stop_iter)
+        x_bests, best_chart, number_measurements, stop_iter = standard_sac(tf, op, epsilon=pow(10, -5))
+        print('Решение', x_bests)
+        print('Количество итераций', stop_iter)
         nm += number_measurements
-        # nm1 += number_measurements1
-        if (-2.2 <= x_bests[0] <= -1.8) and (3.8 <= x_bests[1] <= 4.2):
+        average_numb_iter += stop_iter
+        if (g_min[0] - ep <= x_bests[0] <= g_min[0] + ep) and (g_min[1] - ep <= x_bests[1] <= g_min[1] + ep):
             p += 1
-        # if (-2.2 <= x_bests1[0] <= -1.8) and (3.8 <= x_bests1[1] <= 4.2):
-        #     p1 += 1
-    print('Старый Вероятность', p)
-    print('Старый Среднее количество измерений', nm / 100.0)
-
-    # print('Новый Вероятность', p1)
-    # print('Новый Среднее количество измерений', nm1 / 100.0)
-
-    # print(x_bests)
-    # print(best_chart[:stop_iter])
-    # print(number_measurements)
-    # print(stop_iter)
+    print('Оценка вероятности', p / 100.0)
+    print('Среднее количество измерений', nm / 100.0)
+    print('Среднее количество итераций:', average_numb_iter / 100.0)
 
 
 def main():
