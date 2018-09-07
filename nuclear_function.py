@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def get_function(g, nuclear_func_index, selectivity_factor):
+def get_nuclear_func_val(nuclear_func_index, g, selectivity_factor):
 
     # ядро
     # линейное
