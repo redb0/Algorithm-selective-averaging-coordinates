@@ -46,17 +46,17 @@ python standard_sac_alg.py
 
 Ниже представлена визуализация первых 4 итерация алгоритма:
 
-[Первая итерация алгоритма](https://github.com/redb0/Algorithm-selective-averaging-coordinates/blob/master/png/standard_sac_step_1.png)
+![Первая итерация алгоритма](https://github.com/redb0/Algorithm-selective-averaging-coordinates/blob/master/png/standard_sac_step_1.png)
 
-[Вторая  итерация алгоритма](https://github.com/redb0/Algorithm-selective-averaging-coordinates/blob/master/png/standard_sac_step_2.png)
+![Вторая  итерация алгоритма](https://github.com/redb0/Algorithm-selective-averaging-coordinates/blob/master/png/standard_sac_step_2.png)
 
-[Третья  итерация алгоритма](https://github.com/redb0/Algorithm-selective-averaging-coordinates/blob/master/png/standard_sac_step_3.png)
+![Третья  итерация алгоритма](https://github.com/redb0/Algorithm-selective-averaging-coordinates/blob/master/png/standard_sac_step_3.png)
 
-[Четвертая итерация алгоритма](https://github.com/redb0/Algorithm-selective-averaging-coordinates/blob/master/png/standard_sac_step_4.png)
+![Четвертая итерация алгоритма](https://github.com/redb0/Algorithm-selective-averaging-coordinates/blob/master/png/standard_sac_step_4.png)
 
 Полная работа алгоритма:
 
-[Анимация работы алгоритма](https://github.com/redb0/Algorithm-selective-averaging-coordinates/blob/master/png/Animation.gif)
+![Анимация работы алгоритма](https://github.com/redb0/Algorithm-selective-averaging-coordinates/blob/master/png/Animation.gif)
 
 
 ## Структура файлов
