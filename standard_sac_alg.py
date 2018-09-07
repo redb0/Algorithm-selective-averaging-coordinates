@@ -104,7 +104,7 @@ def standard_sac(test_func: TestFunc, options: Options, epsilon=pow(10, -5)):
         nf_val = find_norm_nuclear_func(g, options)
 
         # Раскомментировать следующие строки для пошаговой визуализации
-        # visualization(op_point, delta, test_func._function, test_points, test_func.down, test_func.up, d=0.1)
+        visualization(op_point, delta, test_func._function, test_points, test_func.down, test_func.up, d=0.1)
 
         op_point, delta = move(op_point, nf_val, test_points, delta, options)
 
